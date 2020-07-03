@@ -2,25 +2,28 @@
 #include <iostream>
 #include <thread>
 #include <pthread.h>
+#include <chrono>
 
-void test() {
-	printf("Hello From Test \n");
+void foo()
+{
+	std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+	printf("Hello From Foo\n");
 }
-void run() {
-	std::thread thread1(test);
 
-	if (thread1.joinable()) {
-		printf("Thread1 is Joinable\n");
-	} else {
-		printf("Thread is not Joinable\n");
-	}
+void bar()
+{
+	std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+	printf("Hello From Bar\n");
+}
 
-	thread1.join();
+void run()
+{
+	std::thread foo_thread(foo);
+	std::thread bar_thread(bar);
+	bar_thread.detach();
+	printf("This is after bar thread detach\n");
 
-	if (thread1.joinable()) {
-		printf("Thread1 is Joinable\n");
-	} else {
-		printf("Thread is not Joinable\n");
-	}
+	foo_thread.join();
+	printf("This is after foo thread join\n");
 }
 
