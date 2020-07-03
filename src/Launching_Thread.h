@@ -3,30 +3,24 @@
 #include <thread>
 #include <pthread.h>
 
-void foo() {
-	printf("Hello from foo-%d\n", std::this_thread::get_id());
+void test() {
+	printf("Hello From Test \n");
 }
-
-class Callable_Object {
-public:
-	void operator ()() {
-		printf("Hello from callable class-%d\n", std::this_thread::get_id());
-	}
-};
-
 void run() {
-	Callable_Object obj;
-	std::thread thread1(foo);
-	std::thread thread2(obj);
-	std::thread thread3([]
-	{
-		printf("Hello from Lambda -%d\n", std::this_thread::get_id());
-	}
-	);
-	thread1.join();
-	thread2.join();
-	thread3.join();
+	std::thread thread1(test);
 
-	printf("Hello from main-%d\n", std::this_thread::get_id());
+	if (thread1.joinable()) {
+		printf("Thread1 is Joinable\n");
+	} else {
+		printf("Thread is not Joinable\n");
+	}
+
+	thread1.join();
+
+	if (thread1.joinable()) {
+		printf("Thread1 is Joinable\n");
+	} else {
+		printf("Thread is not Joinable\n");
+	}
 }
 
